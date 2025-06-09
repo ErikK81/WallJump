@@ -56,21 +56,44 @@ public class WallJumpCommand implements CommandExecutor, TabExecutor {
     }
 
     private boolean handleHelpCommand(@NotNull CommandSender sender) {
-        Component helpMessage = Component.text("[===]").color(NamedTextColor.GOLD).append(Component.text("WallJump Plugin Help").color(NamedTextColor.WHITE).append(Component.text("[===]").color(NamedTextColor.GOLD)))
-                .append(Component.newline());
-        sender.sendMessage(helpMessage);
-        Component helpMessage1 = Component.text("/walljump help ").color(NamedTextColor.WHITE).clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump help")).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text("Click me to show this help message").color(NamedTextColor.YELLOW)))
-                .append(Component.text("Show this help message ").color(NamedTextColor.YELLOW));
-        sender.sendMessage(helpMessage1);
-        Component helpMessage2 = Component.text("/walljump info ").color(NamedTextColor.WHITE).clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump info")).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text("Click me to show plugin info").color(NamedTextColor.YELLOW)))
-                .append(Component.text("Show plugin info").color(NamedTextColor.YELLOW));
-        sender.sendMessage(helpMessage2);
-        Component helpMessage3 = Component.text("/walljump reload ").color(NamedTextColor.WHITE).clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump reload")).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text("Click me to reload the plugin config").color(NamedTextColor.YELLOW)))
-                .append(Component.text("Reload the plugin config ").color(NamedTextColor.YELLOW));
-        sender.sendMessage(helpMessage3);
-        Component helpMessage4 = Component.text("/walljump toggle [on|off] ").color(NamedTextColor.WHITE).clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump toggle")).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text("Click me to toggle wall jump on or off").color(NamedTextColor.YELLOW)))
-                .append(Component.text("Toggle wall jump on or off ").color(NamedTextColor.YELLOW));
-        sender.sendMessage(helpMessage4);
+        Component helpHeader = Component.text("[===] ")
+                .color(NamedTextColor.GOLD)
+                .append(Component.text("WallJump Plugin Help", NamedTextColor.WHITE))
+                .append(Component.text(" [===]", NamedTextColor.GOLD));
+        sender.sendMessage(helpHeader);
+
+        // Interactive help entries
+        sender.sendMessage(
+                Component.text("/walljump help", NamedTextColor.YELLOW)
+                        .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump help"))
+                        .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(
+                                Component.text("Show this help message", NamedTextColor.GRAY)))
+        );
+        sender.sendMessage(
+                Component.text("/walljump info", NamedTextColor.YELLOW)
+                        .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump info"))
+                        .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(
+                                Component.text("Show plugin info", NamedTextColor.GRAY)))
+        );
+        sender.sendMessage(
+                Component.text("/walljump reload", NamedTextColor.YELLOW)
+                        .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump reload"))
+                        .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(
+                                Component.text("Reload the plugin config", NamedTextColor.GRAY)))
+        );
+        sender.sendMessage(
+                Component.text("/walljump toggle ")
+                        .color(NamedTextColor.YELLOW)
+                        .append(Component.text("[on]", NamedTextColor.GREEN)
+                                .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump toggle on"))
+                                .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(
+                                        Component.text("Enable wall jump", NamedTextColor.GRAY))))
+                        .append(Component.space())
+                        .append(Component.text("[off]", NamedTextColor.RED)
+                                .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump toggle off"))
+                                .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(
+                                        Component.text("Disable wall jump", NamedTextColor.GRAY))))
+        );
         return true;
     }
 
@@ -84,9 +107,18 @@ public class WallJumpCommand implements CommandExecutor, TabExecutor {
     private boolean handleToggleCommand(@NotNull Player player, String arg) {
         WPlayer wPlayer = WallJump.getInstance().getPlayerManager().getWPlayer(player);
         if (arg == null) {
-            // Toggle command without specifying on or off
-            Component message = Component.text("You must specify a state!").color(NamedTextColor.RED).append(Component.newline())
-                    .append(Component.text("Usage: /walljump toggle [on|off]").color(NamedTextColor.YELLOW));
+            Component message = Component.text("You must specify a state!", NamedTextColor.RED)
+                    .append(Component.newline())
+                    .append(Component.text("Click: ", NamedTextColor.YELLOW))
+                    .append(Component.text("[on]", NamedTextColor.GREEN)
+                            .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump toggle on"))
+                            .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(
+                                    Component.text("Enable wall jump", NamedTextColor.GRAY))))
+                    .append(Component.space())
+                    .append(Component.text("[off]", NamedTextColor.RED)
+                            .clickEvent(net.kyori.adventure.text.event.ClickEvent.runCommand("/walljump toggle off"))
+                            .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(
+                                    Component.text("Disable wall jump", NamedTextColor.GRAY))));
             player.sendMessage(message);
             return false;
         } else if (arg.equalsIgnoreCase("on")) {
