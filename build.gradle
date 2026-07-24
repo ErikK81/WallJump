@@ -2,11 +2,18 @@ plugins {
     id 'java'
 }
 
-group = 'com.playdeca.walljump'
+group = 'com.erikk.walljump'
 version = '4.0.3'
 
-sourceCompatibility = '21'
-targetCompatibility = '21'
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+    options.encoding = 'UTF-8'
+}
 
 repositories {
     mavenCentral()
@@ -21,8 +28,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly "io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT"
-    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.1.0-SNAPSHOT'
-    implementation fileTree(dir:'libs', include: '*.jar')
-    implementation group: 'org.jetbrains', name: 'annotations', version: '24.0.1'
+    compileOnly 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.17'
+    implementation fileTree(dir: 'libs', include: '*.jar')
+    compileOnly 'org.jetbrains:annotations:24.0.1'
 }

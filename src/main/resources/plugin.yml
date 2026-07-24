@@ -1,7 +1,7 @@
 name: WallJump
 version: 4.0.3
-main: com.playdeca.walljump.WallJump
-api-version: 1.21
+main: com.erikk.walljump.WallJump
+api-version: '1.21.11'
 softdepend: [WorldGuard, TreysDoubleJump]
 authors: [ Arthed, MonsterWhat ]
 description: Adds an easy to understand, yet still challenging wall jump mechanic
