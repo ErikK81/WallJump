@@ -75,7 +75,7 @@ The default configuration includes:
 - Horizontal and vertical jump power
 - Time spent attached to a wall
 - Wall sliding and sliding speed
-- Block-matched particle amount and speed
+- Particle type, amount, and speed (`BLOCK` matches the wall block)
 - Maximum consecutive jumps
 - Block and world blacklists
 - Optional permission checks and per-player toggling

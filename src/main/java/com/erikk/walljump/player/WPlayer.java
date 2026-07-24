@@ -134,6 +134,7 @@ public class WPlayer {
         EffectUtils.spawnSlidingParticles(
                 player,
                 lastFacing,
+                config.getString("particles.type", "BLOCK"),
                 Math.max(0, config.getInt("particles.amount")),
                 Math.max(0, config.getDouble("particles.speed"))
         );

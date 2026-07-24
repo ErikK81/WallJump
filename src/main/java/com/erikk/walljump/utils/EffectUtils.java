@@ -8,11 +8,12 @@ import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import java.util.Locale;
 import java.util.logging.Level;
 
 public class EffectUtils {
 
-    public static void spawnSlidingParticles(Player player, WallFace facing, int amount, double speed) {
+    public static void spawnSlidingParticles(Player player, WallFace facing, String particleName, int amount, double speed) {
         try {
             if (amount <= 0)
                 return;
@@ -22,19 +23,37 @@ public class EffectUtils {
             if (wallBlock == null || !wallBlock.getType().isBlock())
                 return;
 
-            player.getWorld().spawnParticle(
-                    Particle.BLOCK,
-                    location.clone().add(facing.xOffset * 0.3, 0.3, facing.zOffset * 0.3),
-                    amount,
-                    0.2,
-                    0.35,
-                    0.2,
-                    Math.max(0, speed),
-                    wallBlock.getBlockData()
-            );
+            Particle particle = getParticle(particleName);
+            Location particleLocation = location.clone().add(facing.xOffset * 0.3, 0.3, facing.zOffset * 0.3);
+
+            if (particle == Particle.BLOCK) {
+                player.getWorld().spawnParticle(
+                        particle, particleLocation, amount, 0.2, 0.35, 0.2,
+                        Math.max(0, speed), wallBlock.getBlockData()
+                );
+            } else {
+                player.getWorld().spawnParticle(
+                        particle, particleLocation, amount, 0.2, 0.35, 0.2,
+                        Math.max(0, speed)
+                );
+            }
         }catch (Exception e) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to spawn sliding particles for player {0}!", player.getName());
             Bukkit.getLogger().log(Level.WARNING, e.getMessage(), e);
+        }
+    }
+
+    private static Particle getParticle(String particleName) {
+        if (particleName == null || particleName.isBlank())
+            return Particle.BLOCK;
+
+        try {
+            Particle particle = Particle.valueOf(particleName.trim().toUpperCase(Locale.ROOT));
+            if (particle.getDataType() != Void.class && particle != Particle.BLOCK)
+                return Particle.BLOCK;
+            return particle;
+        } catch (IllegalArgumentException e) {
+            return Particle.BLOCK;
         }
     }
 
