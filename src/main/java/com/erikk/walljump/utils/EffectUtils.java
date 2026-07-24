@@ -4,34 +4,37 @@ import com.erikk.walljump.enums.WallFace;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle; 
+import org.bukkit.Particle;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import com.erikk.walljump.utils.BukkitUtils.Version;
 import java.util.logging.Level;
 
 public class EffectUtils {
 
-    public static void spawnSlidingParticles(Player player, int count, WallFace facing) {
+    public static void spawnSlidingParticles(Player player, WallFace facing, int amount, double speed) {
         try {
-            // Check if the server version is lower than 1.8, in which case the method can't be used.
-            if (BukkitUtils.isVersionBefore(Version.V1_8))
+            if (amount <= 0)
                 return;
 
             Location location = player.getLocation();
+            Block wallBlock = LocationUtils.getBlockPlayerIsStuckOn(player, facing);
+            if (wallBlock == null || !wallBlock.getType().isBlock())
+                return;
 
-            // Spawn a particle effect at the player's location, offset in the direction they're facing.
             player.getWorld().spawnParticle(
-                    Particle.CLOUD, // The particle effect to used
-                    location.clone().add(facing.xOffset * 0.3, facing.yOffset * 0.3, facing.zOffset * 0.3), // The location to spawn particles
-                    count, // The number of particles to spawn
-                    0.2f, // The X-axis offset of the particles
-                    0.2f, // The Y-axis offset of the particles
-                    0.2f // The Z-axis offset of the particles
+                    Particle.BLOCK,
+                    location.clone().add(facing.xOffset * 0.3, 0.3, facing.zOffset * 0.3),
+                    amount,
+                    0.2,
+                    0.35,
+                    0.2,
+                    Math.max(0, speed),
+                    wallBlock.getBlockData()
             );
         }catch (Exception e) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to spawn sliding particles for player {0}!", player.getName());
-            Bukkit.getLogger().warning(e.getMessage());
+            Bukkit.getLogger().log(Level.WARNING, e.getMessage(), e);
         }
     }
 

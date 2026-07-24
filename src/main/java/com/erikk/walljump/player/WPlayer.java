@@ -77,18 +77,17 @@ public class WPlayer {
             // Stop some anti-cheat checks that might be caused by wall-jumping
             // AntiCheatUtils.stopPotentialAntiCheatChecks(player);
 
-            // play sound and spawn particles is bugged. TODO: Fix
             EffectUtils.playWallJumpSound(player, lastFacing, 0.3f, 1.2f);
-            EffectUtils.spawnSlidingParticles(player, 5, lastFacing);
+            spawnWallParticles();
 
             // stop the player from falling and moving while on the wall or make them slide down
             velocityY = 0;
             if (BukkitUtils.isVersionBefore(BukkitUtils.Version.V1_9))
                 velocityY = 0.04f;
-            velocityTask = Bukkit.getScheduler().runTaskTimerAsynchronously(WallJump.getInstance(), () -> {
+            velocityTask = Bukkit.getScheduler().runTaskTimer(WallJump.getInstance(), () -> {
                 player.setVelocity(new Vector(0, velocityY, 0));
                 if (velocityY != 0) {
-                    EffectUtils.spawnSlidingParticles(player, 2, lastFacing);
+                    spawnWallParticles();
                     if (sliding) {
                         if (player.isOnGround() || !Objects.requireNonNull(LocationUtils.getBlockPlayerIsStuckOn(player, lastFacing)).getType().isSolid()) {
                             // make the player slide down the wall and stop wall jumping
@@ -111,7 +110,7 @@ public class WPlayer {
             // make the player fall | slide when the time runs out
             if (fallTask != null)
                 fallTask.cancel();
-            fallTask = Bukkit.getScheduler().runTaskLaterAsynchronously(WallJump.getInstance(), () -> {
+            fallTask = Bukkit.getScheduler().runTaskLater(WallJump.getInstance(), () -> {
                 if (onWall) {
                     if (config.getBoolean("slide")) {
                         velocityY = (float) -config.getDouble("slidingSpeed");
@@ -129,6 +128,15 @@ public class WPlayer {
         }catch (IllegalArgumentException | IllegalStateException e){
            Bukkit.getLogger().log(Level.WARNING, "Failed to start wall jump for player {0}!", player.getName());
         }
+    }
+
+    private void spawnWallParticles() {
+        EffectUtils.spawnSlidingParticles(
+                player,
+                lastFacing,
+                Math.max(0, config.getInt("particles.amount")),
+                Math.max(0, config.getDouble("particles.speed"))
+        );
     }
 
     public void onWallJumpEnd() {

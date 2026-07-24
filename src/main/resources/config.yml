@@ -14,6 +14,12 @@ timeOnWall: 0.6
 slide: true
 #The speed at which the player is sliding down | Default: 0.17
 slidingSpeed: 0.17
+#Particles use the appearance of the block the player is currently holding onto
+#Amount of block particles spawned each time | Default: 2
+particles:
+   amount: 2
+   #Particle movement speed | Default: 0.05
+   speed: 0.05
 #If true, the player will be pushed up when they release shift, even if they are sliding
 canJumpWhileSliding: true
 #The amount of times the player can wall jump in a row Default: 0
