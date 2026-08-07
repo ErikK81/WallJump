@@ -1,6 +1,6 @@
 name: WallJump
 version: 4.0.3
-main: com.erikk.walljump.WallJump
+main: com.kebab.walljump.WallJump
 api-version: '1.21.11'
 softdepend: [WorldGuard, TreysDoubleJump]
 authors: [ Arthed, MonsterWhat ]
